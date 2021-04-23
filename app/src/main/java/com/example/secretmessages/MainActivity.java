@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn;
 
     public String caesar(String message, int keyVal) {
-        String output = "";
+        StringBuilder output = new StringBuilder();
 
         char key = (char)keyVal;
 
@@ -61,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
                 if (input < '0')
                     input += 10;
             }
-            output += input;
+            output.append(input);
         }
 
-        return output;
+        return output.toString();
     }
     private void setSlider() {
         try {
@@ -102,12 +102,7 @@ public class MainActivity extends AppCompatActivity {
         slider = (SeekBar)findViewById(R.id.seekBar2);
         btn = (Button)findViewById(R.id.button);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSlider();
-            }
-        });
+        btn.setOnClickListener(v -> setSlider());
 
         slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -130,12 +125,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
+        fab.setOnClickListener(view -> {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Secret Message " +
+                    DateFormat.getDateTimeInstance().format(new Date()));
+            shareIntent.putExtra(Intent.EXTRA_TEXT, txtOut.getText().toString());
+            try {
+                startActivity(Intent.createChooser(shareIntent, "Share message..."));
+                finish();
             }
+            catch(android.content.ActivityNotFoundException ex) {
+                Toast.makeText(MainActivity.this, "Error. Could not share.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();*/
         });
     }
 
