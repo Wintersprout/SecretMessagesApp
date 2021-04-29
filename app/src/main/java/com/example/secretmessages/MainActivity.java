@@ -102,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
         slider = (SeekBar)findViewById(R.id.seekBar2);
         btn = (Button)findViewById(R.id.button);
 
+        Intent receiveIntent = getIntent();
+        String receivedText = receiveIntent.getStringExtra(Intent.EXTRA_TEXT);
+        if (receivedText != null)
+            txtIn.setText(receivedText);
+
         btn.setOnClickListener(v -> setSlider());
 
         slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
